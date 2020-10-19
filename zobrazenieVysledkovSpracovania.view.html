@@ -1,0 +1,320 @@
+<page-info title="'Zobrazenie výsledkov spracovania'"></page-info>
+<div class="content-container">
+    <div class="content xs-pt-20 xs-pr-20 xs-pl-20 xs-pb-10">
+        <div class="panel panel-default">
+            <div class="panel-heading" toggle-panel>
+                <span class="panel-icon glyphicon glyphicon-menu-down"></span> <span class="h4 text-primary">Vyhľadanie výsledkov spracovania</span></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-offset-1 col-lg-5 col-md-6 col-md-offset-0 col-xs-10 col-xs-offset-1">
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Dátum a čas spustenia od</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input datetime-picker date-format="dd.MM.yyyy HH:mm" hour="23" minute="60" class="form-control input-sm" ng-model="vm.vyhladavanie.datumOd">
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Náhrady za OPT poškodené pri výrobe</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.poskodene" disabled></div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Novo narodených/evidovaných občanov</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.novonarodeni"></div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Občanov so zmenou údajov</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.zmenaUdajov"></div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Okresy adresáta</label></div>
+                            <div class="col-xs-6 text-left">
+                                <div id="multiselect-okresy"
+                                     ng-dropdown-multiselect
+                                     options="vm.zobrazeneCiselniky.okresy"
+                                     selected-model="vm.vyhladavanie.okresyAdresata"
+                                     extra-settings="vm.okresyNastavenia"
+                                     translation-texts ="vm.okresyPreklady"
+                                ></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-offset-0 col-lg-5 col-md-6 col-md-offset-0 col-xs-10 col-xs-offset-1">
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Dátum a čas spustenia do</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input datetime-picker date-format="dd.MM.yyyy HH:mm" hour="23" minute="59" class="form-control input-sm" ng-model="vm.vyhladavanie.datumDo">
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Manuálne zadané žiadosti</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.manualneZadane"></div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Stratené/odcudzené OPT</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.stratene"></div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right"><label>Iniciálne dávky</label></div>
+                            <div class="col-xs-6"><input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.vyhladavanie.inicialne"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" class="btn btn-primary btn-lg xs-mr-10" ng-click="vm.validovatVyhladavanie()">Vyhľadať</button>
+                <button type="button" class="btn btn-primary btn-lg xs-mr-10" ng-click="vm.vymazatVyhladavanie()">Vymazať</button>
+            </div>
+            <div class="panel-footer" ng-if="vm.chybaVyhladavania">
+                <div class="col-xs-12 col-lg-10 col-lg-offset-1 xs-pb-20">
+                    <div class="alert alert-danger xs-mt-0">{{vm.chybaVyhladavania}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" toggle-panel>
+                <span class="panel-icon glyphicon glyphicon-menu-down"></span> <span class="h4 text-primary">Zoznam spracovaných dávok</span></div>
+            <div class="panel-body">
+                <div class="table-wrapper">
+                    <table class="table table-scrollable table-clickable" st-table="vm.zoznamSpracovanychDavok" st-safe-src="vm.zoznamSpracovanychDavokZdroj">
+                        <thead>
+                            <tr>
+                                <th st-sort="zaciatokSpracovania">Začiatok spracovania</th>
+                                <th st-sort="koniecSpracovania">Koniec spracovania</th>
+                                <th st-sort="spracovaneZaznamy">Spracované záznamy</th>
+                                <th st-sort="vygenerovaneZiadosti">Vygenerované žiadosti</th>
+                                <th st-sort="novonarodeni">Generovať žiadosti pre novo narodených/evidovaných občanov</th>
+                                <th st-sort="stratene">Generovať žiadosti pre stratené OPT</th>
+                                <th st-sort="zmenaUdajov">Generovať žiadosti pre občanov so zmenou údajov</th>
+                                <th st-sort="inicialne">Generovať iniciálne dávky žiadostí</th>
+                                <th st-sort="manualneZadane">Generovať objednávky pre manuálne zadané žiadosti</th>
+                                <th st-sort="datumNarodeniaOd">Dátum narodenia od</th>
+                                <th st-sort="datumNarodeniaDo">Dátum narodenia do</th>
+                                <th st-sort="maxPocet">Max počet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="zaznam in vm.zoznamSpracovanychDavok" ng-class="{success: zaznam.check}" ng-click="vm.oznacitDavku(zaznam, vm.zoznamSpracovanychDavok)">
+                                <td>{{ zaznam.zaciatokSpracovania | date :  "dd.MM.yyyy HH:mm" }}</td>
+                                <td>{{ zaznam.koniecSpracovania | date :  "dd.MM.yyyy HH:mm" }}</td>
+                                <td>{{ zaznam.spracovaneZaznamy }}</td>
+                                <td>{{ zaznam.vygenerovaneZiadosti }}</td>
+                                <td>{{ zaznam.novonarodeni | logickaHodnota }}</td>
+                                <td>{{ zaznam.stratene | logickaHodnota }}</td>
+                                <td>{{ zaznam.zmenaUdajov | logickaHodnota }}</td>
+                                <td>{{ zaznam.inicialne | logickaHodnota }}</td>
+                                <td>{{ zaznam.manualneZadane | logickaHodnota }}</td>
+                                <td>{{ zaznam.datumNarodeniaOd | date :  "dd.MM.yyyy" }}</td>
+                                <td>{{ zaznam.datumNarodeniaDo | date :  "dd.MM.yyyy" }}</td>
+                                <td>{{ zaznam.maxPocet}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" ng-if="vm.ziadneVysledkyVyhladavania">
+                        <div class="col-xs-12 col-lg-10 col-lg-offset-1 xs-pb-20">
+                            <div class="alert alert-danger xs-mt-0">{{vm.ziadneVysledkyVyhladavania}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" toggle-panel>
+                <span class="panel-icon glyphicon glyphicon-menu-down"></span> <span class="h4 text-primary">Zoznam spracovaných front</span></div>
+            <div class="panel-body">
+                <div class="table-wrapper">
+                    <table class="table table-scrollable table-clickable" st-table="vm.zoznamSpracovanychFront" st-safe-src="vm.zoznamSpracovanychFrontZdroj">
+                        <thead>
+                            <tr>
+                                <th st-sort="typFronty">Typ fronty</th>
+                                <th st-sort="parametreFronty">Parametre fronty</th>
+                                <th st-sort="zaciatokSpracovania">Začiatok spracovania</th>
+                                <th st-sort="koniecSpracovania">Koniec spracovania</th>
+                                <th st-sort="spracovaneZaznamy">Spracované záznamy</th>
+                                <th st-sort="vygenerovaneZiadosti">Vygenerované žiadosti</th>
+                                <th st-sort="poziadaviekVoFronte">Požiadaviek vo fronte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="zaznam in vm.zoznamSpracovanychFront" ng-class="{success: zaznam.check}" ng-click="vm.oznacitFrontu(zaznam, vm.zoznamSpracovanychFront)">
+                                <td>{{ zaznam.typFronty }}</td>
+                                <td>{{ zaznam.parametreFronty }}</td>
+                                <td>{{ zaznam.zaciatokSpracovania | date :  "dd.MM.yyyy HH:mm" }}</td>
+                                <td>{{ zaznam.koniecSpracovania | date :  "dd.MM.yyyy HH:mm" }}</td>
+                                <td>{{ zaznam.spracovaneZaznamy }}</td>
+                                <td>{{ zaznam.vygenerovaneZiadosti }}</td>
+                                <td>{{ zaznam.poziadaviekVoFronte}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" ng-if="vm.ziadneSpracovaneFronty">
+                        <div class="col-xs-12 col-lg-10 col-lg-offset-1 xs-pb-20">
+                            <div class="alert alert-danger xs-mt-0">{{vm.ziadneSpracovaneFronty}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-show="vm.zobrazenyFilter">
+            <div class="panel-heading" toggle-panel>
+                <span class="panel-icon glyphicon glyphicon-menu-down"></span> <span class="h4 text-primary">Filter záznamov</span>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2">
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Osoba</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input ng-disabled="true" type="text" ng-model="vm.filter.osoba" title="{{ vm.filter.osoba }}" class="form-control input-sm flex-1">
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6">
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="flex">
+                                    <button type="button" class="btn btn-primary btn-sm flex-1" ng-click="vm.vybratOsobu()" ng-disabled="vm.filter.osoba">Vybrať</button>
+                                    <button type="button" class="btn btn-primary btn-sm xs-ml-10 flex-1" ng-click="vm.zmazatOsobu()" ng-disabled="!vm.filter.osoba">Zmazať</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Výsledok spracovania</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <ui-select ng-model="vm.filter.vysledokSpracovania" title="{{$select.selected}}">
+                                    <ui-select-match>{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices  repeat="item in (vm.ciselnikVysledkySpracovania | filter: $select.search) track by item">
+                                        <div title="{{item}}" class="bold">{{item}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden" ng-model="vm.filter.vysledokSpracovania"/>
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Spôsob vybavenia</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <ui-select ng-model="vm.filter.sposobVybavenia" ng-disabled="vm.filter.ibaNevybavene || vm.filterDisabledVybavenie" title="{{$select.selected}}">
+                                    <ui-select-match>{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices  repeat="item in (vm.ciselnikSposobyVybavenia | filter: $select.search) track by item">
+                                        <div title="{{item}}" class="bold">{{item}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden" ng-model="vm.filter.sposobVybavenia"/>
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+
+                            <div class="col-xs-6 text-right">
+                                <label>Iba vybavené</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.filter.ibaVybavene" ng-init="vm.filter.ibaVybavene=false" ng-disabled="vm.filterDisabledVybavenie">
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Iba nevybavené</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.filter.ibaNevybavene" ng-init="vm.filter.ibaNevybavene=false" ng-disabled="vm.filterDisabledVybavenie">
+                            </div>
+                        </div>
+                        <div class="row xs-mb-10">
+                            <div class="col-xs-6 text-right">
+                                <label>Vyhľadania v celej histórii</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input type="checkbox" class="checkbox-inline checkbox-big" ng-model="vm.filter.vCelejHistorii" ng-init="vm.filter.vCelejHistorii=false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" class="btn btn-primary btn-lg xs-mr-10" ng-disabled="!vm.oznacenaFronta && !vm.filter.vCelejHistorii" ng-click="vm.vybratFilter()">Vyhľadať</button>
+                <button type="button" class="btn btn-primary btn-lg xs-mr-10" ng-click="vm.zrusitFilter()">Vymazať</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-show="vm.zobrazenyFilter">
+            <div class="panel-heading" toggle-panel>
+                <span class="panel-icon glyphicon glyphicon-menu-down"></span> <span class="h4 text-primary">Zoznam spracovaných záznamov</span></div>
+            <div class="panel-body">
+                <div class="table-wrapper">
+                    <table class="table table-scrollable" st-table="vm.zoznamSpracovanychZaznamov" st-safe-src="vm.zoznamSpracovanychZaznamovZdroj">
+                        <thead>
+                        <tr>
+                            <th st-sort="osoba">Osoba</th>
+                            <th class="column-xs">Detail osoby</th>
+                            <th st-sort="vysledokSpracovania">Výsledok spracovania</th>
+                            <th st-sort="informaciaOSpracovani">Informácia o spracovaní</th>
+                            <th st-sort="vybavene">Vybavené</th>
+                            <th st-sort="sposobVybavenia">Spôsob vybavenia</th>
+                            <th st-sort="zahajenieSpracovnia">Dátum a čas zahájenia spracovania</th>
+                            <th st-sort="ziadost">Žiadosť</th>
+                            <th class="column-xs">Detail žiadosti</th>
+                            <th st-sort="cisloDokladu">Číslo dokladu</th>
+                            <th class="column-xs">Detail dokladu</th>
+                            <th class="column-xs">Zapísať vybavenie</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="zaznam in vm.zoznamSpracovanychZaznamov">
+                            <td>{{ zaznam.osoba }}</td>
+                            <td class="column-xs td-button"><button type="button" class="btn btn-primary btn-xs" ng-disabled="!zaznam.opravnenie" ng-click="vm.zobrazitDetailOsoby(zaznam.osobaId, $event)">Osoba</button></td>
+                            <td>{{ zaznam.vysledokSpracovania }}</td>
+                            <td>{{ zaznam.informaciaOSpracovani }}</td>
+                            <td><input type="checkbox" class="checkbox-inline checkbox-small" ng-model="zaznam.vybavene" ng-disabled="zaznam.vysledokSpracovania === 'Bez chyby'"></td>
+                            <td>
+                                <ui-select ui-select-close append-to-body="true" ng-model="zaznam.sposobVybavenia" ng-disabled="!zaznam.vybavene || zaznam.vysledokSpracovania === 'Bez chyby'" title="{{$select.selected}}">
+                                    <ui-select-match>{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices  repeat="item in (vm.ciselnikSposobyVybavenia | filter: $select.search) track by item">
+                                        <div title="{{item}}" class="bold">{{item}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden" ng-model="zaznam.sposobVybavenia"/>
+                            </td>
+                            <td>{{ zaznam.zahajenieSpracovnia | date :  "dd.MM.yyyy HH:mm" }}</td>
+                            <td>{{ zaznam.ziadost }}</td>
+                            <td class="column-xs td-button"><button type="button" class="btn btn-primary btn-xs" ng-disabled="!zaznam.opravnenie || !zaznam.ziadost" ng-click="vm.zobrazitDetailZiadosti(zaznam.ziadost, $event)">Žiadosť</button></td>
+                            <td>{{ zaznam.cisloDokladu}}</td>
+                            <td class="column-xs td-button"><button type="button" class="btn btn-primary btn-xs" ng-disabled="!zaznam.opravnenie || !zaznam.cisloDokladu" ng-click="vm.zobrazitDetailDokladu(zaznam.cisloDokladu, $event)">Doklad</button></td>
+                            <td class="column-xs td-button"><button type="button" class="btn btn-primary btn-xs" ng-disabled="(zaznam.vybavene === zaznam.vybavenePovodne && zaznam.sposobVybavenia === zaznam.sposobVybaveniaPovodne) || (zaznam.vybavene && !zaznam.sposobVybavenia)" ng-click="vm.zapisatVybavenie(zaznam, $event)">Zapísať</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" ng-if="vm.ziadneSpracovaneZaznamy">
+                        <div class="col-xs-12 col-lg-10 col-lg-offset-1 xs-pb-20">
+                            <div class="alert alert-danger xs-mt-0">{{vm.ziadneSpracovaneZaznamy}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination pagination-custom" ng-show="vm.zoznamSpracovanychZaznamov.length">
+                    <button type="button" class="btn btn-primary btn-sm pagination-btn" ng-click="vm.vybratFilter('-')" ng-disabled="vm.cisloStranky===1"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <span class="page-number">{{vm.cisloStranky}}</span>
+                    <button type="button" class="btn btn-primary btn-sm pagination-btn" ng-click="vm.vybratFilter('+')" ng-disabled="vm.zoznamSpracovanychZaznamov.length < vm.zaznamovNaStranku"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="page-buttons">
+    <div class="buttons-wrapper xs-pr-20 xs-pl-20">
+        <button type="button" class="btn btn-primary btn-lg xs-mr-10" ng-click="vm.ukoncitObrazovku()">Ukončiť</button>
+    </div>
+</div>
